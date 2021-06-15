@@ -151,9 +151,8 @@
                 </center>
                 <ol>
                     <p>
-                    <h4>Thanks for being here, I hope I got your attention | For questions contact me on<p>
-                            <code>686c74616b79646e40706d2e6d65</code>
-                        </p>
+                    <h4 id="conClick" onclick="contactFunction()">Thanks for being here, I hope I got your attention |
+                        For questions contact me on <code>686c74616b79646e40706d2e6d65</code>
                     </h4>
                     </p>
                 </ol>
@@ -187,6 +186,11 @@
         gtag('js', new Date());
 
         gtag('config', 'UA-179582600-2');
+    </script>
+    <script>
+        function contactFunction() {
+            document.getElementById("conClick").innerHTML = "mailto: hltakydn@pm.me";
+        }
     </script>
 
 
